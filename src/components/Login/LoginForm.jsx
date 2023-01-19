@@ -7,7 +7,6 @@ const usernameConfig = {
 }
 const LoginForm = () => {
 
-    const LoginForm = () => {
         const {
             register,
             handleSubmit,
@@ -17,12 +16,12 @@ const LoginForm = () => {
         const onSubmit = (data) => {
             console.log(data)
         }
-    }
+
 
     return (
         <>
             <h2>What's your name?</h2>
-            <form onSubmit={handleSubmit(onsubmit)}>
+            <form onSubmit={ handleSubmit(onSubmit) }>
                 <fieldset>
                     <label htmlFor="username">Username: </label>
                     <input
