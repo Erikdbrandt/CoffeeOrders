@@ -1,3 +1,5 @@
+import withAuth from "../hoc/withAuth"
+
 const Orders = () => {
 
     return (
@@ -5,4 +7,4 @@ const Orders = () => {
     )
 }
 
-export default Orders
+export default withAuth(Orders)
