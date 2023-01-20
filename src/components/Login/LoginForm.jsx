@@ -1,6 +1,9 @@
 import {useForm} from 'react-hook-form'
 import {loginUser} from "../../api/user";
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import {storageRead, storageSave} from "../../utils/storage"
+import {Navigate, useNavigate} from 'react-router-dom'
+import {useUser} from "../../context/UserContext"
 
 const usernameConfig = {
     required: true,
@@ -8,20 +11,38 @@ const usernameConfig = {
 }
 const LoginForm = () => {
 
-    const {
-        register,
-        handleSubmit,
-        formState: {errors}
-    } = useForm()
+    //Hooks
+    const {register, handleSubmit, formState: {errors}} = useForm()
+    const { user, setUser } = useUser()
+    const navigate = useNavigate()
 
-    const [loading, setloading] = useState(false)
+    // Local State
+    const [loading, setLoading] = useState(false)
+    const [apiError, setApiError] = useState(null)
 
+    // Side Effects
+    useEffect(() => {
+        if(user !== null){
+            navigate('profile')
+        }
+
+    }, [user, navigate]) //Empty deps - Only run 1ce
+
+    //Event Handles
     const onSubmit = async ({username}) => {
-        setloading(true)
-        const [error, user] = await loginUser(username)
-        setloading(false)
+        setLoading(true)
+        const [error, userResponse] = await loginUser(username)
+        if (error !== null) {
+            setApiError(error)
+        }
+        if (userResponse !== null) {
+            storageSave('coffee-user', userResponse)
+            setUser(userResponse)
+        }
+        setLoading(false)
     }
 
+    //Render Functions
 
     const errorMessage = (() => {
         if (!errors.username) {
@@ -53,6 +74,7 @@ const LoginForm = () => {
 
                 <button type="submit" disabled={loading}>Continue</button>
                 {loading && <p>Logging in...</p>}
+                {apiError && <p> {apiError}</p>}
             </form>
         </>
     )
