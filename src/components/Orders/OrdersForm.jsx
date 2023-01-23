@@ -1,13 +1,11 @@
 import {useForm} from "react-hook-form"
 
-const OrdersForm = () => {
+const OrdersForm = ({onOrder}) => {
 
 
     const {register, handleSubmit} = useForm()
 
-    const onSubmit = data => {
-        console.log(data)
-    }
+    const onSubmit = ({orderNotes}) => { onOrder(orderNotes)}
 
     return (
 

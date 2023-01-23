@@ -2,6 +2,8 @@ import withAuth from "../hoc/withAuth"
 import OrdersCoffeeButton from "../components/Orders/OrdersCoffeeButton"
 import OrdersForm from "../components/Orders/OrdersForm"
 import {useState} from "react"
+import {useUser} from "../context/UserContext"
+import {orderAdd} from "../api/order"
 
 
 const COFFEES = [
@@ -29,10 +31,29 @@ const COFFEES = [
 
 const Orders = () => {
 
-    const [coffee,setCoffee] = useState(null)
+    const [coffee, setCoffee] = useState(null)
+    const {user} = useUser()
+
     const handleCoffeeClicked = (coffeeId) => {
         setCoffee(COFFEES.find(coffee => coffee.id === coffeeId))
     }
+
+    const handleOrderClicked = async (notes) => {
+        console.log(notes)
+        if (!coffee) {
+            alert('Please select a coffee first')
+            return
+        }
+        const order = (coffee.name + ' ' + notes).trim()
+
+
+        const [error, result] = await orderAdd(user, order)
+
+        console.log('Error', error)
+        console.log('Result', result)
+
+    }
+
 
     const availableCoffees = COFFEES.map(coffee => {
         return <OrdersCoffeeButton
@@ -50,10 +71,10 @@ const Orders = () => {
 
             </section>
             <section id="order-notes">
-                <OrdersForm/>
+                <OrdersForm onOrder={handleOrderClicked}/>
             </section>
             <h4>Summary: </h4>
-            {coffee && <p>Selected coffee: { coffee.name}</p> }
+            {coffee && <p>Selected coffee: {coffee.name}</p>}
         </>
 
     )
