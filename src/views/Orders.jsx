@@ -6,6 +6,7 @@ import {useUser} from "../context/UserContext"
 import {orderAdd} from "../api/order"
 import {storageSave} from "../utils/storage"
 import {STORAGE_KEY_USER} from "../const/storageKeys"
+import OrdersSummary from "../components/Orders/OrdersSummary"
 
 
 const COFFEES = [
@@ -84,8 +85,7 @@ const Orders = () => {
             <section id="order-notes">
                 <OrdersForm onOrder={handleOrderClicked}/>
             </section>
-            <h4>Summary: </h4>
-            {coffee && <p>Selected coffee: {coffee.name}</p>}
+            {coffee && <OrdersSummary coffee={coffee} />}
         </>
 
     )
